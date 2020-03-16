@@ -1,0 +1,102 @@
+clear all; clc;
+load usmodel_data.mat
+% data starts in 1947Q3 (see SW original data on AER website).
+% Three samples for table 6: 1966(1):2004(4), 1966(1):1979(2), and
+% 1984(1):2004(4)
+% Corresponding nobs in mat: 75 = 1966(1), 128 = 1979(2), 147 = 1984(1),
+% and 230 = 2004(4)
+
+% Smets Wouters read me
+% usmodel_hist_dsge_f19_7_7158_mode   -> mode file for 1966(1):1979(2)
+% usmodel_hist_dsge_f19_7_143_mode    -> mode file for 1984(1):2004(4)
+% usmodel_mode                        -> mode file for 1966(1):2004(4)
+% NOTE: I take estimated modes directly from the AER website. The modes are
+% NOT re-estimated in this replication.
+
+% To replicate the table, just click run and the table should populate in
+% the Command Window after running. To replicate you must have Dynare
+% installed on your computer.
+% For any questions or comments, please contact me at
+% joshua.brault@carleton.ca
+param_vec = []; TABLE_6 = [];
+% Empirical standard deviations
+TABLE_6(1,1) = round(std(dy(75:230)),2);
+TABLE_6(2,1) = round(std(pinfobs(75:230)),2);
+
+TABLE_6(1,3) = round(std(dy(75:128)),2);
+TABLE_6(2,3) = round(std(pinfobs(75:128)),2);
+
+
+TABLE_6(1,5) = round(std(dy(147:230)),2);
+TABLE_6(2,5) = round(std(pinfobs(147:230)),2);
+
+% 1966(1)-2004(4)
+load usmodel_mode
+param_vec = xparam1;
+PARAMFILE;
+dynare Smets_Wouters_2007
+TABLE_6(1,2) = round(sqrt(oo_.var(1,1)),2);
+TABLE_6(2,2) = round(sqrt(oo_.var(2,2)),2);
+
+% 1966(1)-1979(2)
+load usmodel_hist_dsge_f19_7_7158_mode
+param_vec = xparam1;
+PARAMFILE;
+dynare Smets_Wouters_2007
+TABLE_6(1,4) = round(sqrt(oo_.var(1,1)),2);
+TABLE_6(2,4) = round(sqrt(oo_.var(2,2)),2);
+
+% 1984(4)-2004(4)
+load usmodel_hist_dsge_f19_7_143_mode
+param_vec = xparam1;
+PARAMFILE;
+dynare Smets_Wouters_2007
+TABLE_6(1,6) = round(sqrt(oo_.var(1,1)),2);
+TABLE_6(2,6) = round(sqrt(oo_.var(2,2)),2);
+
+% counterfactual shocks - use structural parameters from post-1984 mode
+% with persistence and shock std's from 1966(1)-1979(2).
+load usmodel_hist_dsge_f19_7_143_mode
+param_vec(15:36) = xparam1(15:36); % structural model parameters equal to post-1984 modes
+load usmodel_hist_dsge_f19_7_7158_mode
+param_vec(1:14) = xparam1(1:14); % shock stds and persistence equal to pre-1979 modes
+param_vec(
+PARAMFILE
+dynare Smets_Wouters_2007
+TABLE_6(1,7) = round(sqrt(oo_.var(1,1)),2);
+TABLE_6(2,7) = round(sqrt(oo_.var(2,2)),2);
+
+% counterfactual policy rule - use structural parameters from post-1984 and
+% policy parameters (crpi, crr, cry, crdy)
+load usmodel_hist_dsge_f19_7_143_mode
+param_vec(1:36) = xparam1(1:36); % take modes from post-1984
+load usmodel_hist_dsge_f19_7_7158_mode
+param_vec(27:30) = xparam1(27:30); % replace policy parameters equal to pre-1979 modes
+PARAMFILE;
+dynare Smets_Wouters_2007
+TABLE_6(1,8) = round(sqrt(oo_.var(1,1)),2);
+TABLE_6(2,8) = round(sqrt(oo_.var(2,2)),2);
+
+% counterfactual structural parameters - use structural parameters from
+% pre-1979 mode and shocks from post-1984 sample.
+load usmodel_hist_dsge_f19_7_7158_mode
+param_vec(15:36) = xparam1(15:36); % setting structural parameters to pre-1979
+load usmodel_hist_dsge_f19_7_143_mode
+param_vec(1:14) = xparam1(1:14); % setting shock processes (stds and persistence) to post-1984
+PARAMFILE; % load into PARAMFILE.mat
+dynare Smets_Wouters_2007
+TABLE_6(1,9) = round(sqrt(oo_.var(1,1)),2);
+TABLE_6(2,9) = round(sqrt(oo_.var(2,2)),2);
+
+
+TABLE_6
+
+
+% Some folder cleanup
+!del Smets_Wouters_2007_dynamic.m
+!del Smets_Wouters_2007_set_auxiliary_variables.m
+!del Smets_Wouters_2007_static.m
+!del Smets_Wouters_2007_steadystate2.m
+!del Smets_Wouters_2007.log
+!del Smets_Wouters_2007.m
+

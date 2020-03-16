@@ -1,0 +1,40 @@
+std_ea = param_vec(1,1);
+std_eb = param_vec(2,1);
+std_eg = param_vec(3,1);
+std_eqs = param_vec(4,1);
+std_em = param_vec(5,1);
+std_epinf = param_vec(6,1);
+std_ew = param_vec(7,1);
+crhoa = param_vec(8,1);
+crhob = param_vec(9,1);
+crhog = param_vec(10,1);
+crhoqs = param_vec(11,1);
+crhoms = param_vec(12,1);
+crhopinf = param_vec(13,1);
+crhow = param_vec(14,1);
+cmap = param_vec(15,1);
+cmaw = param_vec(16,1);
+csadjcost = param_vec(17,1);
+csigma = param_vec(18,1);
+chabb = param_vec(19,1);
+cprobw = param_vec(20,1);
+csigl = param_vec(21,1);
+cprobp = param_vec(22,1);
+cindw = param_vec(23,1);
+cindp = param_vec(24,1);
+czcap = param_vec(25,1);
+cfc = param_vec(26,1);
+crpi = param_vec(27,1);
+crr = param_vec(28,1);
+cry = param_vec(29,1);
+crdy = param_vec(30,1);
+constepinf = param_vec(31,1);
+constebeta = param_vec(32,1);
+constelab = param_vec(33,1);
+ctrend = param_vec(34,1);
+cgy = param_vec(35,1);
+calfa = param_vec(36,1);
+
+save PARAMFILE std_ea std_eb std_eg std_eqs std_em std_epinf std_ew crhoa crhob crhog crhoqs crhoms crhopinf crhow cmap cmaw csadjcost ...
+csigma chabb cprobw csigl cprobp cindw cindp czcap cfc crpi crr cry crdy constepinf constebeta constelab ...
+ctrend cgy calfa
